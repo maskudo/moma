@@ -1,0 +1,3 @@
+[submodule "server/collection"]
+	path = server/collection
+	url = git@github.com:maskudo/moma_collection.git
