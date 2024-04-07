@@ -1,0 +1,24 @@
+DROP TABLE IF EXISTS tmp;
+DROP TABLE IF EXISTS artists;
+
+CREATE TABLE tmp (c text);
+\copy tmp from '/artists.json';
+
+CREATE TABLE tmp2 (c text);
+\copy tmp2 from '/artworks.json';
+
+CREATE TABLE artists (
+  "ConstituentID" INT PRIMARY KEY,
+  "DisplayName" VARCHAR(255),
+  "ArtistBio" VARCHAR(255),
+  "Nationality" VARCHAR(50),
+  "Gender" VARCHAR(255),
+  "BeginDate" INT,
+  "EndDate" INT
+);
+
+
+INSERT into artists 
+SELECT q.* from tmp, json_populate_record(null::artists, c::json) AS q
+WHERE NOT (c IS NULL OR c::jsonb = 'null'::jsonb)
+ON CONFLICT DO NOTHING;
