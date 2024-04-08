@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS tmp;
+DROP TABLE IF EXISTS tmp2;
 DROP TABLE IF EXISTS artists;
+DROP TABLE IF EXISTS artworks;
 
 CREATE TABLE tmp (c text);
 \copy tmp from '/artists.json';
@@ -8,7 +10,7 @@ CREATE TABLE tmp2 (c text);
 \copy tmp2 from '/artworks.json';
 
 CREATE TABLE artists (
-  "ConstituentID" INT PRIMARY KEY,
+  "ConstituentID" SERIAL PRIMARY KEY,
   "DisplayName" VARCHAR(255),
   "ArtistBio" VARCHAR(255),
   "Nationality" VARCHAR(50),
@@ -17,8 +19,43 @@ CREATE TABLE artists (
   "EndDate" INT
 );
 
+CREATE TABLE artworks (
+  id SERIAL PRIMARY KEY,
+  "Title" VARCHAR(255),
+  "ConstituentID" INT[],
+  "Date" VARCHAR(20),
+  "Nationality" VARCHAR(100),
+  "URL" VARCHAR(255),
+  "ImageURL" VARCHAR(255),
+  CONSTRAINT fk_artists FOREIGN KEY ("ConstituentID")  REFERENCES artists
+);
+
+CREATE OR REPLACE FUNCTION json_array_castint(json) RETURNS int[] AS $f$
+    SELECT array_agg(x)::int[] || ARRAY[]::int[] FROM json_array_elements_text($1) t(x);
+$f$ LANGUAGE sql IMMUTABLE;
+
+CREATE TABLE artist_artwork(
+  id SERIAL PRIMARY KEY,
+  "ConstituentID" INT REFERENCES artists("ConstituentID")
+)
 
 INSERT into artists 
 SELECT q.* from tmp, json_populate_record(null::artists, c::json) AS q
 WHERE NOT (c IS NULL OR c::jsonb = 'null'::jsonb)
 ON CONFLICT DO NOTHING;
+
+INSERT INTO artworks (Title, Date, Nationality, URL, ImageURL, ConstituentID)
+SELECT
+    q->>'Title',
+    q->>'Date',
+    q->>'Nationality',
+    q->>'URL',
+    q->>'ImageURL',
+    ARRAY(
+        SELECT id 
+        FROM artists 
+        WHERE ConstituentID IN (
+            SELECT unnest(string_to_array(q->>'ConstituentID', ',')) -- Convert JSON array to PostgreSQL array
+        )
+    )
+FROM tmp, json_array_elements(tmp.c) AS q;
