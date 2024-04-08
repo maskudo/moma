@@ -10,7 +10,7 @@ dotenv.config();
 const app: Application = express();
 const port = process.env.PORT || 8000;
 
-app.use(cors());
+app.use(cors<Request>());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,7 +36,7 @@ app.post('/artists', async (req: Request, res: Response) => {
 });
 
 app.get('/artists', async (req: Request, res: Response) => {
-  const data = await pool.query<Artists>('SELECT * from artists;');
+  const data = await pool.query<Artists>('SELECT * from artists limit 10;');
   res.json(data.rows);
 });
 
