@@ -3,6 +3,7 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Artists } from '@/types/Artists';
+import { cn } from '../../lib/utils';
 
 
 const columns: ColumnDef<Artists>[] = [
@@ -19,31 +20,40 @@ const columns: ColumnDef<Artists>[] = [
     ),
   },
   {
-    header: 'TYPE',
-    cell: () => {
-      return <div className="w-max flex gap-6 ">hello</div>;
+    header: 'DisplayName',
+    cell: ({ row }) => {
+      return <div className="w-max flex gap-6 ">{row.original.DisplayName}</div>;
     },
   },
 
   {
-    header: 'SCHEDULED',
-    cell: () => {
+    header: 'ArtistBio',
+    cell: ({ row }) => {
       return (
-        <div className="w-max flex gap-6 ">hello</div>
+        <div className="w-max flex gap-6 ">{row.original.ArtistBio}</div>
       );
     },
   },
 
   {
-    header: 'STATUS',
-    cell: () => {
+    header: 'Nationality',
+    cell: ({ row }) => {
       return (
-        <div className="w-max flex gap-6 ">hello</div>
+        <div className="w-max flex gap-6 ">{row.original.Nationality}</div>
+      );
+    },
+  },
+  {
+    header: 'Gender',
+    cell: ({ row }) => {
+      return (
+        <div className="w-max flex gap-6 ">{row.original.Gender}</div>
       );
     },
   },
   {
     id: 'actions',
+    header: 'Actions',
     enableHiding: false,
     cell: () => {
       return (
@@ -53,8 +63,20 @@ const columns: ColumnDef<Artists>[] = [
             e.stopPropagation();
           }}
         >
+          {/* preview link */}
+          <a
+            href={`#`}
+            className={cn([
+              'hover:bg-black-10 p-1 rounded',
+              'opacity-0 group-hover:opacity-100',
+            ])}
+          >
+            eye
+          </a>
 
-          hello
+          {/* edit watch */}
+
+          {/* action dropdown */}
         </div>
       );
     },

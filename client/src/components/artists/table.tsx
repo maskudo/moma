@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import {
   ColumnDef,
   flexRender,
@@ -27,7 +27,6 @@ function DataTable<TData, TValue>({
   isLoading,
   columns,
   data,
-  totalItems,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -55,6 +54,9 @@ function DataTable<TData, TValue>({
 
   return (
     <div>
+      <h2 className='text-[2rem]'>
+        Artists
+      </h2>
       <Header />
       <Table>
         <TableHeader>

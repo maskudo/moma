@@ -20,26 +20,32 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/artists', async (req: Request, res: Response) => {
   try {
-    console.log({ body: req.body });
     const { DisplayName, ArtistBio, Nationality, Gender, BeginDate, EndDate } =
       req.body;
     const { rows } = await pool.query(
       `INSERT INTO artists("DisplayName", "ArtistBio", "Nationality", "Gender", "BeginDate", "EndDate") VALUES($1, $2, $3, $4, $5, $6) returning *;`,
       [DisplayName, ArtistBio, Nationality, Gender, BeginDate, EndDate]
     );
-    console.log(rows[0]);
     res.json(rows[0]);
   } catch (e: any) {
-    console.log(e.message);
     res.status(400).json({ message: e.message });
   }
 });
 
 app.get('/artists', async (req: Request, res: Response) => {
-  const data = await pool.query<Artists>('SELECT * from artists limit 10;');
+  const { artist } = req.query;
+  let data;
+  if (artist?.length) {
+    data = await pool.query<Artists>(
+      `SELECT * from artists where "DisplayName" like $1 limit 10;`,
+      [`%${artist}%`]
+    );
+  } else {
+    data = await pool.query<Artists>('SELECT * from artists limit 10;');
+  }
   res.json(data.rows);
 });
 
 app.listen(port, () => {
-  console.log(`Server is Fire at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
