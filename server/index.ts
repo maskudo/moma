@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { pool } from './src/config/db';
 import { Artists } from './src/interface/Artists';
+import { Artwork } from '@/interface/Artworks';
 
 //For env File
 dotenv.config();
@@ -28,20 +29,38 @@ app.post('/artists', async (req: Request, res: Response) => {
     );
     res.json(rows[0]);
   } catch (e: any) {
-    res.status(400).json({ message: e.message });
+    res.status(500).json({ message: e.message });
   }
 });
 
 app.get('/artists', async (req: Request, res: Response) => {
-  const { artist } = req.query;
+  try {
+    const { artist } = req.query;
+    let data;
+    if (artist?.length) {
+      data = await pool.query<Artists>(
+        `SELECT * from artists where "DisplayName" like $1 limit 10;`,
+        [`%${artist}%`]
+      );
+    } else {
+      data = await pool.query<Artists>('SELECT * from artists limit 10;');
+    }
+    res.json(data.rows);
+  } catch (e: any) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+app.get('/artworks', async (req: Request, res: Response) => {
+  const { artwork } = req.query;
   let data;
-  if (artist?.length) {
+  if (artwork?.length) {
     data = await pool.query<Artists>(
-      `SELECT * from artists where "DisplayName" like $1 limit 10;`,
-      [`%${artist}%`]
+      `SELECT * from artworks where "Title" like $1 limit 10;`,
+      [`%${artwork}%`]
     );
   } else {
-    data = await pool.query<Artists>('SELECT * from artists limit 10;');
+    data = await pool.query<Artwork>('SELECT * from artworks limit 10;');
   }
   res.json(data.rows);
 });
