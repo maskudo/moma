@@ -99,7 +99,7 @@ client
               parsedLine.ImageURL,
             ]
           );
-          Promise.all([
+          await Promise.all([
             parsedLine.ConstituentID.map((id) => {
               return client.query(
                 `INSERT INTO artwork_artist(artist_id, artwork_id) VALUES ($1, $2)`,
@@ -108,9 +108,7 @@ client
             }),
           ]);
         }),
-      ]).then(() => {
-        client.end();
-      });
+      ]);
     } catch (e) {
       console.log(e.message);
     }

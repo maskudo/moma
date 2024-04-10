@@ -26,6 +26,7 @@ const Header: React.FC = () => {
   const [formValues, setFormValues] = React.useState(defaultFormValues)
   const { setParam } = useMySearchParams()
   const [open, setOpen] = React.useState(false)
+  const [open2, setOpen2] = React.useState(false)
   const [searchedArtist, setSearchedArtist] = React.useState('')
   const [value, setValue] = React.useState("")
   const createArtwork = useCreateArtwork()
@@ -54,7 +55,7 @@ const Header: React.FC = () => {
         placeholder="Search Artworks"
         className="min-w-[5rem] mr-1"
       />
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open2} onOpenChange={setOpen2}>
         <PopoverTrigger asChild>
           <button
             role="combobox"

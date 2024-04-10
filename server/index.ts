@@ -57,7 +57,7 @@ app.get('/artworks', async (req: Request, res: Response) => {
   if (artwork?.length || artist?.length) {
     if (!artist?.length) {
       data = await pool.query<Artists>(
-        `SELECT * from artworks 
+        `SELECT *, artworks.id from artworks 
       JOIN 
         artwork_artist ON artworks.id = artwork_artist.artwork_id
       JOIN 
@@ -67,7 +67,7 @@ app.get('/artworks', async (req: Request, res: Response) => {
       );
     } else {
       data = await pool.query<Artists>(
-        `SELECT * from artworks 
+        `SELECT *, artworks.id from artworks 
       JOIN 
         artwork_artist ON artworks.id = artwork_artist.artwork_id
       JOIN 
@@ -80,7 +80,7 @@ app.get('/artworks', async (req: Request, res: Response) => {
     }
   } else {
     data = await pool.query<Artwork>(`
-    SELECT * from artworks 
+    SELECT *,artworks.id from artworks 
     JOIN 
         artwork_artist ON artworks.id = artwork_artist.artwork_id
     JOIN 
@@ -108,6 +108,11 @@ app.post('/artworks', async (req: Request, res: Response) => {
 app.delete('/artworks/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log({ id });
+  const { rows } = await pool.query<Artwork>(
+    `DELETE FROM artworks where id = $1`,
+    [id]
+  );
+  console.log([rows]);
   res.status(200).json({ id });
 });
 
