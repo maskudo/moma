@@ -10,7 +10,6 @@ interface ICreateArtworks {
   ImageURL: string,
   Nationality: string,
   Date: string
-
 }
 const deleteArtwork = async (id: number | string) => {
   const { data } = await axios.delete(`http://localhost:8000/artworks/` + id);

@@ -5,6 +5,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Artists } from '@/types/Artists';
 import { cn } from '../../lib/utils';
 import { Trash } from 'lucide-react';
+import { deleteArtist } from '@/mutation/delete-artist';
+import toast from 'react-hot-toast';
 
 
 const columns: ColumnDef<Artists>[] = [
@@ -54,7 +56,15 @@ const columns: ColumnDef<Artists>[] = [
     id: 'actions',
     header: 'Actions',
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
+      const handleClick = async () => {
+        try {
+          await deleteArtist(row.original.ConstituentID)
+          toast.success("Artwork deleted successfully.")
+        } catch (e) {
+          toast.error("Error deleting artwork")
+        }
+      }
       return (
         <div
           className="w-max flex items-center gap-x-3"
@@ -62,20 +72,16 @@ const columns: ColumnDef<Artists>[] = [
             e.stopPropagation();
           }}
         >
-          {/* preview link */}
-          <a
-            href={`#`}
+          <button
+            onClick={handleClick}
             className={cn([
               'hover:bg-black-10 p-1 rounded',
               'opacity-0 group-hover:opacity-100',
             ])}
           >
             <Trash />
-          </a>
+          </button>
 
-          {/* edit watch */}
-
-          {/* action dropdown */}
         </div>
       );
     },

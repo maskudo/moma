@@ -26,4 +26,4 @@ const useArtists = (searchParams?: GetArtistsParams) => {
   });
 };
 
-export { useArtists }
+export { useArtists, GET_ARTISTS_QUERY }

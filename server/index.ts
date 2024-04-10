@@ -51,6 +51,17 @@ app.get('/artists', async (req: Request, res: Response) => {
   }
 });
 
+app.delete('/artists/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log({ id });
+  const { rows } = await pool.query<Artwork>(
+    `DELETE FROM artists where "ConstituentID" = $1`,
+    [id]
+  );
+  console.log([rows]);
+  res.status(200).json({ id });
+});
+
 app.get('/artworks', async (req: Request, res: Response) => {
   const { artwork, artist } = req.query;
   let data;

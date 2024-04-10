@@ -96,7 +96,6 @@ const columns: ColumnDef<Artwork>[] = [
             e.stopPropagation();
           }}
         >
-          {/* preview link */}
           <button
             className={cn([
               'hover:bg-black-10 p-1 rounded',
@@ -106,10 +105,6 @@ const columns: ColumnDef<Artwork>[] = [
           >
             <Trash />
           </button>
-
-          {/* edit watch */}
-
-          {/* action dropdown */}
         </div>
       );
     },

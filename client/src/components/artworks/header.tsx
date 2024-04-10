@@ -59,7 +59,7 @@ const Header: React.FC = () => {
         <PopoverTrigger asChild>
           <button
             role="combobox"
-            aria-expanded={open}
+            aria-expanded={open2}
             className="w-[200px] flex justify-between bg-gray-100 p-2 rounded-2xl"
 
           >
