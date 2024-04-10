@@ -10,7 +10,7 @@ const pgConfig = {
   port: 5432,
 };
 
-// Read JSON file as a stream
+// use streams and buffering to not blog up ram usage when file is very large
 const artistsFile = fs.readFileSync('./Artists.json', { encoding: 'utf8' });
 const artworksFile = fs.readFileSync('./Artworks.json', { encoding: 'utf8' });
 
@@ -47,8 +47,8 @@ client
       
       CREATE TABLE artwork_artist (
         id SERIAL PRIMARY KEY,
-        artist_id INT REFERENCES artists("ConstituentID"),
-        artwork_id INT REFERENCES artworks("id")
+        artist_id INT REFERENCES artists("ConstituentID") ON DELETE CASCADE,
+        artwork_id INT REFERENCES artworks("id") ON DELETE CASCADE
       );
       `);
       let count = 0;
@@ -102,9 +102,7 @@ client
           Promise.all([
             parsedLine.ConstituentID.map((id) => {
               return client.query(
-                `
-                  INSERT INTO artwork_artist(artist_id, artwork_id) VALUES ($1, $2)
-`,
+                `INSERT INTO artwork_artist(artist_id, artwork_id) VALUES ($1, $2)`,
                 [id, rows[0].id]
               );
             }),

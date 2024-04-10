@@ -4,15 +4,16 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { cn } from '../../lib/utils';
 import { Artwork } from '@/types/Artworks';
+import { Trash } from 'lucide-react';
+import { deleteArtwork, } from '@/mutation/create-artwork';
+import toast from 'react-hot-toast';
 
 
 const columns: ColumnDef<Artwork>[] = [
   {
-    header: 'TITLE',
+    header: 'ID',
     cell: ({ row }) => (
-      <div className="flex items-center gap-x-4 lg:min-w-[34.5rem]">
-        <div className="relative w-12.5 h-8 shrink-0 rounded overflow-hidden">
-        </div>
+      <div className="flex items-center gap-x-4 ">
         <div>
           <span className="block text-b1 mb-1 line-clamp-1 max-w-[60ch]">{row.original.id}</span>
         </div>
@@ -77,7 +78,17 @@ const columns: ColumnDef<Artwork>[] = [
     id: 'actions',
     header: 'Actions',
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
+      //cannot use hook here in react but you could in next js with a disable eslint rule
+      const handleClick = async () => {
+        try {
+          await deleteArtwork(row.original.id)
+          toast.success("Artwork deleted successfully.")
+        } catch (e) {
+          toast.error("Error deleting artwork")
+        }
+      }
+
       return (
         <div
           className="w-max flex items-center gap-x-3"
@@ -86,15 +97,15 @@ const columns: ColumnDef<Artwork>[] = [
           }}
         >
           {/* preview link */}
-          <a
-            href={`#`}
+          <button
             className={cn([
               'hover:bg-black-10 p-1 rounded',
               'opacity-0 group-hover:opacity-100',
             ])}
+            onClick={handleClick}
           >
-            Delete
-          </a>
+            <Trash />
+          </button>
 
           {/* edit watch */}
 

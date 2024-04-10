@@ -91,6 +91,12 @@ app.post('/artworks', async (req: Request, res: Response) => {
   res.json({ artwork: rows[0] });
 });
 
+app.delete('/artworks/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log({ id });
+  res.status(200).json({ id });
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

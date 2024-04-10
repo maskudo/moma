@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useMutation, } from "@tanstack/react-query";
+import { useMutation, useQueryClient, } from "@tanstack/react-query";
+import { GET_ARTWORKS_QUERY } from "@/queries/get-artworks";
 
 
 interface ICreateArtworks {
@@ -11,6 +12,20 @@ interface ICreateArtworks {
   Date: string
 
 }
+const deleteArtwork = async (id: number | string) => {
+  const { data } = await axios.delete(`http://localhost:8000/artworks/` + id);
+  return data;
+};
+const useDeleteArtwork = () => {
+  return useMutation({
+    mutationFn: deleteArtwork,
+    onSuccess: () => {
+      const qc = useQueryClient()
+      qc.invalidateQueries({ queryKey: [GET_ARTWORKS_QUERY] })
+    }
+  });
+};
+
 const createArtwork = async (createArtworkData: ICreateArtworks) => {
   const { data } = await axios.post(`http://localhost:8000/artworks`, {
     ...createArtworkData
@@ -23,4 +38,4 @@ const useCreateArtwork = () => {
   });
 };
 
-export { useCreateArtwork }
+export { useCreateArtwork, useDeleteArtwork, deleteArtwork }

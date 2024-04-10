@@ -4,17 +4,16 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Artists } from '@/types/Artists';
 import { cn } from '../../lib/utils';
+import { Trash } from 'lucide-react';
 
 
 const columns: ColumnDef<Artists>[] = [
   {
-    header: 'TITLE',
+    header: 'ID',
     cell: ({ row }) => (
-      <div className="flex items-center gap-x-4 lg:min-w-[34.5rem]">
-        <div className="relative w-12.5 h-8 shrink-0 rounded overflow-hidden">
-        </div>
+      <div className="flex items-center gap-x-4 ">
         <div>
-          <span className="block text-b1 mb-1 line-clamp-1 max-w-[60ch]">{row.original.ConstituentID}</span>
+          <span className="block text-b1 mb-1 line-clamp-1 ">{row.original.ConstituentID}</span>
         </div>
       </div>
     ),
@@ -71,7 +70,7 @@ const columns: ColumnDef<Artists>[] = [
               'opacity-0 group-hover:opacity-100',
             ])}
           >
-            eye
+            <Trash />
           </a>
 
           {/* edit watch */}

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Artwork } from '@/types/Artworks';
 
-const GET_ARTWORKS_QUERY = 'get-artworks-query'
+export const GET_ARTWORKS_QUERY = 'get-artworks-query'
 interface GetArtworksParams {
   artwork?: string;
   page?: string;

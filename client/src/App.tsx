@@ -17,7 +17,6 @@ function App() {
   return <div className="">
     <DataTable columns={columns} data={data ?? []} totalItems={data?.length ?? 0} />
     <ArtworkTable columns={artworkColumn} data={artworksData ?? []} totalItems={artworksData?.length ?? 0} />
-
   </div>;
 }
 
