@@ -28,8 +28,9 @@ const Header: React.FC = () => {
   const [open, setOpen] = React.useState(false)
   const [searchedArtist, setSearchedArtist] = React.useState('')
   const [value, setValue] = React.useState("")
-  const { data: artists } = useArtists({ artist: searchedArtist || undefined })
   const createArtwork = useCreateArtwork()
+  const [searchedArtist2, setSearchedArtist2] = React.useState('')
+  const { data: artists } = useArtists({ artist: searchedArtist || searchedArtist2 || undefined })
 
   const submitForm = () => {
     console.log({ formValues })
@@ -53,6 +54,52 @@ const Header: React.FC = () => {
         placeholder="Search Artworks"
         className="min-w-[5rem] mr-1"
       />
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            role="combobox"
+            aria-expanded={open}
+            className="w-[200px] flex justify-between bg-gray-100 p-2 rounded-2xl"
+
+          >
+            {value
+              ? artists?.find((artist) => String(artist.ConstituentID) === value)?.DisplayName
+              : "Select Artist"}
+            <ChevronsUpDown />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput placeholder="Search artist..." value={searchedArtist2} onValueChange={(val) => setSearchedArtist2(val)} />
+            <CommandEmpty>No artist found.</CommandEmpty>
+            <CommandGroup>
+              <CommandList>
+                {artists?.map((artist) => (
+                  <CommandItem
+                    key={artist.ConstituentID}
+                    value={artist.DisplayName}
+                    onSelect={(currentValue) => {
+                      const val = String(artists.find(art => art.DisplayName === currentValue)?.ConstituentID)
+                      setValue(val ?? '')
+                      setParam('artwork-artist', val)
+                      setOpen(false)
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === String(artist.ConstituentID) ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {artist.DisplayName}
+                  </CommandItem>
+                ))}
+              </CommandList>
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
       <Dialog>
         <DialogTrigger asChild>
           <button className='bg-blue-400 text-white rounded-2xl hover:bg-blue-500 animate-in duration-300'>Add new artwork</button>

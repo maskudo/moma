@@ -52,18 +52,32 @@ app.get('/artists', async (req: Request, res: Response) => {
 });
 
 app.get('/artworks', async (req: Request, res: Response) => {
-  const { artwork } = req.query;
+  const { artwork, artist } = req.query;
   let data;
-  if (artwork?.length) {
-    data = await pool.query<Artists>(
-      `SELECT * from artworks 
+  if (artwork?.length || artist?.length) {
+    if (!artist?.length) {
+      data = await pool.query<Artists>(
+        `SELECT * from artworks 
       JOIN 
         artwork_artist ON artworks.id = artwork_artist.artwork_id
       JOIN 
         artists ON artwork_artist.artist_id = artists."ConstituentID"
       where "Title" like $1 limit 10;`,
-      [`%${artwork}%`]
-    );
+        [`%${artwork}%`]
+      );
+    } else {
+      data = await pool.query<Artists>(
+        `SELECT * from artworks 
+      JOIN 
+        artwork_artist ON artworks.id = artwork_artist.artwork_id
+      JOIN 
+        artists ON artwork_artist.artist_id = artists."ConstituentID"
+      where "Title" like $1 ` +
+          (artist?.length ? ' AND artwork_artist.artist_id = $2' : '') +
+          ' limit 10;',
+        [`%${artwork}%`, artist]
+      );
+    }
   } else {
     data = await pool.query<Artwork>(`
     SELECT * from artworks 

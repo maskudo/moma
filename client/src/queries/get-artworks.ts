@@ -6,6 +6,7 @@ import { Artwork } from '@/types/Artworks';
 export const GET_ARTWORKS_QUERY = 'get-artworks-query'
 interface GetArtworksParams {
   artwork?: string;
+  artist?: string;
   page?: string;
   limit?: string;
 }
