@@ -5,4 +5,5 @@ export interface Artwork {
   Nationality: string;
   URL: string;
   ImageURL: string;
+  DisplayName: string;
 }

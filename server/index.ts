@@ -56,11 +56,23 @@ app.get('/artworks', async (req: Request, res: Response) => {
   let data;
   if (artwork?.length) {
     data = await pool.query<Artists>(
-      `SELECT * from artworks where "Title" like $1 limit 10;`,
+      `SELECT * from artworks 
+      JOIN 
+        artwork_artist ON artworks.id = artwork_artist.artwork_id
+      JOIN 
+        artists ON artwork_artist.artist_id = artists."ConstituentID"
+      where "Title" like $1 limit 10;`,
       [`%${artwork}%`]
     );
   } else {
-    data = await pool.query<Artwork>('SELECT * from artworks limit 10;');
+    data = await pool.query<Artwork>(`
+    SELECT * from artworks 
+    JOIN 
+        artwork_artist ON artworks.id = artwork_artist.artwork_id
+    JOIN 
+        artists ON artwork_artist.artist_id = artists."ConstituentID"
+    limit 10;
+    `);
   }
   res.json(data.rows);
 });

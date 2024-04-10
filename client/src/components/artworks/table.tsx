@@ -55,7 +55,7 @@ function DataTable<TData, TValue>({
   return (
     <div>
       <h2 className='text-[2rem]'>
-        Artists
+        Artworks
       </h2>
       <Header />
       <Table>

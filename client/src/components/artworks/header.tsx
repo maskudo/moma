@@ -16,6 +16,9 @@ const Header: React.FC = () => {
         placeholder="Search Artworks"
         className="min-w-[5rem] mr-1"
       />
+      <button className='bg-blue-400 text-white rounded-2xl hover:bg-blue-500 animate-in duration-300'>
+        Add new artwork
+      </button>
     </div>
   );
 };

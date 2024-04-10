@@ -30,7 +30,7 @@ const columns: ColumnDef<Artwork>[] = [
     header: 'Artist',
     cell: ({ row }) => {
       return (
-        <div className="w-max flex gap-6 ">{row.original.Title}</div>
+        <div className="w-max flex gap-6 ">{row.original.DisplayName}</div>
       );
     },
   },
@@ -48,7 +48,7 @@ const columns: ColumnDef<Artwork>[] = [
     cell: ({ row }) => {
       return (
         <div className="w-max flex gap-6 ">
-          <a href={row.original.URL}>URL</a>
+          <a target='_blank' rel='noreferrer' href={row.original.URL}>URL</a>
         </div>
       );
     },
