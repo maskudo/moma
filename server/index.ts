@@ -77,6 +77,20 @@ app.get('/artworks', async (req: Request, res: Response) => {
   res.json(data.rows);
 });
 
+app.post('/artworks', async (req: Request, res: Response) => {
+  const { Artist, Title, Date, Nationality, URL, ImageURL } = req.body;
+  const { rows } = await pool.query<Artwork>(
+    `INSERT INTO artworks("Title", "Date", "Nationality", "URL", "ImageURL") VALUES($1, $2, $3, $4, $5) returning *;`,
+    [Title, Date, Nationality, URL, ImageURL]
+  );
+  const id = rows[0].id;
+  await pool.query(
+    `INSERT INTO artwork_artist(artist_id, artwork_id) VALUES($1, $2)`,
+    [Artist, id]
+  );
+  res.json({ artwork: rows[0] });
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

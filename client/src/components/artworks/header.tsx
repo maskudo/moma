@@ -9,26 +9,38 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useArtists } from '@/queries/get-artists';
+import { useCreateArtwork } from '@/mutation/create-artwork';
+import toast from 'react-hot-toast';
 
+const defaultFormValues = {
+
+  Title: '',
+  Artist: 0,
+  URL: '',
+  ImageURL: '',
+  Nationality: '',
+  Date: ''
+}
 
 const Header: React.FC = () => {
-  const [formValues, setFormValues] = React.useState({
-    Title: '',
-    Artist: 0,
-    URL: '',
-    ImageURL: '',
-    Nationality: '',
-    Date: ''
-  })
+  const [formValues, setFormValues] = React.useState(defaultFormValues)
   const { setParam } = useMySearchParams()
   const [open, setOpen] = React.useState(false)
   const [searchedArtist, setSearchedArtist] = React.useState('')
   const [value, setValue] = React.useState("")
   const { data: artists } = useArtists({ artist: searchedArtist || undefined })
-  console.log({ value, artists, searchedArtist })
+  const createArtwork = useCreateArtwork()
 
   const submitForm = () => {
     console.log({ formValues })
+    createArtwork.mutate(formValues, {
+      onSuccess: (data) => {
+        toast.success('Artwork added successfully')
+        console.log({ data })
+
+      },
+      onError: (data) => toast.error('There was an error adding the artwork: ' + data.message)
+    })
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { setFormValues({ ...formValues, [e.target.name]: e.target.value }) }
