@@ -3,23 +3,15 @@
 import { cn } from '../../lib/utils';
 import * as React from 'react';
 import { Input } from '../ui/input';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import useMySearchParams from '@/hooks/use-search-params';
 
 const Header: React.FC = () => {
-  let [searchParams, _setSearchParams] = useSearchParams()
-  const artistName = searchParams.get('artist');
-  const navigate = useNavigate()
-  const pathname = useLocation()
-  console.log({ pathname })
+  const { setParam } = useMySearchParams()
   return (
     <div className={cn(['flex items-center justify-between text-b1'])}>
       <Input
         onChange={(e) => {
-          searchParams.set('artist', e.target.value)
-          console.log(e.target.value)
-          const params = new URLSearchParams();
-          params.set('artist', artistName ?? '');
-          navigate(pathname.pathname + '?' + params.toString())
+          setParam('artist', e.target.value)
         }}
         placeholder="Search Artists"
         className="min-w-[5rem] mr-1"
